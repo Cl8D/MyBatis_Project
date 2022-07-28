@@ -26,7 +26,7 @@
     </select>
 
     <!-- useGeneratedKey를 통해 insert 이후 boardId가 자동으로 증가하도록 설정.-->
-    <insert id="save" parameterType="study.mybatisproject.domain.board.entity.Board"
+    <insert id="save" parameterType="study.mybatisproject.api.controller.dto.BoardRequest"
     useGeneratedKeys="true" keyProperty="boardId">
         insert into t_board
         (
@@ -42,7 +42,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="study.mybatisproject.domain.board.entity.Board">
+    <update id="update" parameterType="study.mybatisproject.api.controller.dto.BoardRequest">
         update t_board
         set
             title = #{title},

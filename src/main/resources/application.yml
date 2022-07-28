@@ -4,3 +4,7 @@ spring:
     jdbc-url: ENC(pwAvrfwPnPlhX1wx4Uji5S1HPgjz840eul5KZxtAgi8coSXe4C3Wud2qGigjEfqFFxCtD8jm9ib6Nyj/ZvsiHArxj+UMicMoxjwcyaZ81Xs=)
     username: ENC(ayzyyRHZs+yyDXCMHijkNw==)
     password: ENC(Qhw0pcuK4dppToh93Me/Yw==)
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher

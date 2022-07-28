@@ -2,6 +2,7 @@ package study.mybatisproject.domain.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import study.mybatisproject.api.controller.dto.BoardRequest;
 import study.mybatisproject.domain.board.entity.Board;
 import study.mybatisproject.domain.board.repository.BoardRepository;
 
@@ -33,11 +34,12 @@ public class BoardService {
     /**
      * 게시글 저장 / 수정
      */
-    public void save(Board board) {
+    public void  save(BoardRequest board) {
         Board findBoard = boardRepository.getBoard(board.getBoardId());
-        if (findBoard == null) {
+        if(findBoard == null) {
             boardRepository.save(board);
-        } else {
+        }
+        else {
             boardRepository.update(board);
         }
     }
