@@ -34,3 +34,5 @@ out/production/classes/META-INF/spring-configuration-metadata.json
 *.class
 
 out/production/resources/application.yml
+
+out/production/resources/mybatis/sql/Board.xml
