@@ -5,7 +5,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import study.mybatisproject.api.common.config.exception.ApiException;
+import study.mybatisproject.api.common.config.http.ApiResponseCode;
+import study.mybatisproject.api.controller.dto.ApiResponse;
 import study.mybatisproject.api.controller.dto.BoardRequest;
 import study.mybatisproject.domain.board.entity.Board;
 import study.mybatisproject.domain.board.service.BoardService;
@@ -28,8 +33,8 @@ public class BoardController {
      */
     @GetMapping
     @ApiOperation(value = "게시글 여러 건 조회", notes = "게시글의 전체 목록을 조회할 수 있습니다.")
-    public List<Board> getBoardList() {
-        return boardService.getBoardList();
+    public ApiResponse<List<Board>> getBoardList() {
+        return new ApiResponse<>(boardService.getBoardList());
     }
 
     /**
@@ -40,8 +45,13 @@ public class BoardController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "boardId", value = "게시글 번호", example = "1", dataTypeClass = int.class)
     })
-    public Board getBoard(@PathVariable int boardId) {
-        return boardService.getBoard(boardId);
+    public ApiResponse<Board> getBoard(@PathVariable int boardId) {
+        Board board = boardService.getBoard(boardId);
+        if (board == null) {
+            throw new ApiException(ApiResponseCode.DATA_IS_NULL,
+                    new String[]{String.valueOf(boardId), "번 게시글"});
+        }
+        return new ApiResponse<>(board);
     }
 
     /**
@@ -54,9 +64,19 @@ public class BoardController {
             @ApiImplicitParam(name = "title", value = "제목", example = "title", dataTypeClass = String.class),
             @ApiImplicitParam(name = "content", value = "내용", example = "content", dataTypeClass = String.class)
     })
-    public int save(BoardRequest board) {
+    public ApiResponse<Integer> save(BoardRequest board) {
+        // 제목 필수 체크
+        if(ObjectUtils.isEmpty(board.getTitle())) {
+            throw new ApiException(ApiResponseCode.VALIDATE_REQUIRED,
+                    new String[] {"title", "제목"});
+        }
+        // 내용 필수 체크
+        if(ObjectUtils.isEmpty(board.getContent())) {
+            throw new ApiException(ApiResponseCode.VALIDATE_REQUIRED,
+                    new String[] {"content", "내용"});
+        }
         boardService.save(board);
-        return board.getBoardId();
+        return new ApiResponse<>(board.getBoardId());
     }
 
 
@@ -68,12 +88,12 @@ public class BoardController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "boardId", value = "게시글 번호", example = "1", dataTypeClass = int.class),
     })
-    public boolean delete(@PathVariable int boardId) {
+    public ApiResponse<Boolean> delete(@PathVariable int boardId) {
         Board findBoard = boardService.getBoard(boardId);
         if(findBoard == null) {
-            return false;
+            return new ApiResponse<>(false);
         }
         boardService.delete(boardId);
-        return true;
+        return new ApiResponse<>(true);
     }
 }
