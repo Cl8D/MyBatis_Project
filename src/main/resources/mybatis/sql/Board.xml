@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="study.mybatisproject.domain.board.repository.BoardRepository">
+    <select id="getBoardList" parameterType="study.mybatisproject.domain.board.entity.Board"
+            resultType="study.mybatisproject.domain.board.entity.Board">
+    select
+        b.board_id,
+        b.title,
+        b.content,
+        b.reg_date
+    from t_board b
+    order by b.reg_date desc
+    </select>
+
+    <select id="getBoard" parameterType="int"
+            resultType="study.mybatisproject.domain.board.entity.Board">
+        select
+            b.board_id,
+            b.title,
+            b.content,
+            b.reg_date
+        from t_board b
+        where b.board_id = #{boardId}
+    </select>
+
+    <!-- useGeneratedKey를 통해 insert 이후 boardId가 자동으로 증가하도록 설정.-->
+    <insert id="save" parameterType="study.mybatisproject.domain.board.entity.Board"
+    useGeneratedKeys="true" keyProperty="boardId">
+        insert into t_board
+        (
+         title,
+         content,
+         reg_date
+        )
+        values
+        (
+            #{title},
+            #{content},
+            NOW()
+        )
+    </insert>
+
+    <update id="update" parameterType="study.mybatisproject.domain.board.entity.Board">
+        update t_board
+        set
+            title = #{title},
+            content = #{content}
+        where board_id = #{boardId}
+    </update>
+
+
+    <delete id="delete" parameterType="int">
+        delete from t_board
+        where board_id = #{boardId}
+    </delete>
+</mapper>
+

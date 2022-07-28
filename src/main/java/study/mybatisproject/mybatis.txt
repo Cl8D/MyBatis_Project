@@ -1,0 +1,29 @@
+- mysql이랑 연결할 때 이상하게 단순히 url로 지정하면 안 되고 jdbc-url로 지정해줘야 잘 작동하였다.
+
+찾아보니까, Spring Boot 2.x.x에서는 JDBC pool을 Tomcat -> HikariCP로 변경하면서
+jdbc-url로 설정하는 게 옳다고 하는 것 같다! (HikariCP가 인식하기 위해서)
+
+관련 답변) https://stackoverflow.com/questions/49088847/after-spring-boot-2-0-migration-jdbcurl-is-required-with-driverclassname
+
+===
+
+<MySQL에서 입력해준 쿼리> - sql 공부 진짜 절실하게 필요하다... ;ㅅ;
+create database mybatisProject;
+use mybatisProject;
+
+create table t_board (
+	board_id int(11) not null auto_increment,
+    title varchar(100) not null,
+    content text not null,
+    reg_date datetime not null,
+    primary key (board_id)
+ );
+
+ desc t_board;
+
+ insert into t_board(title, content, reg_date) values ('test', 'test content', '2022-07-28 19:22:38.0');
+ select * from t_board;
+
+==============
+
+
