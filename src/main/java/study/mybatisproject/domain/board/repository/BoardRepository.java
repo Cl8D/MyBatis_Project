@@ -5,6 +5,7 @@ import study.mybatisproject.api.controller.dto.BoardRequest;
 import study.mybatisproject.domain.board.entity.Board;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 게시판 레파지토리
@@ -18,4 +19,5 @@ public interface BoardRepository {
     void update(BoardRequest board);
     void delete(int boardId);
 
+    void saveList(Map<String, Object> paramMap);
 }
