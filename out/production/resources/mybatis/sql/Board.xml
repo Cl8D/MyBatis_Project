@@ -55,5 +55,24 @@
         delete from t_board
         where board_id = #{boardId}
     </delete>
+
+    <insert id="saveList" parameterType="map">
+        insert into t_board (
+             title,
+             content,
+             reg_date
+        )
+        values
+        <!-- 여기서 boardList는 파라미터 타입이 map일 때 key의 이름을 말한다. -->
+        <!-- 각각의 반복문이 돌면서 item="board"라고 지정 후 구분자로 ,를 두었다. -->
+        <foreach collection="boardList" item="board" separator=",">
+            (
+                #{board.title},
+                #{board.content},
+                NOW()
+            )
+        </foreach>
+    </insert>
+    
 </mapper>
 
