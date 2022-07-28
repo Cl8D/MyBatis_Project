@@ -26,4 +26,9 @@ create table t_board (
 
 ==============
 
+- swagger 설정 오류
+https://www.inflearn.com/questions/230160
+버전 바뀌면서 오류 생겨서, 이거 보고 따라해줬다... :D
 
+접근 경로) http://localhost:8080/swagger-ui/index.html
+혹은 그냥 http://localhost:8080/api-docs도 가능.
