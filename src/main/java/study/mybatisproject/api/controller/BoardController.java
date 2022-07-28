@@ -5,16 +5,18 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import study.mybatisproject.api.common.config.exception.ApiException;
 import study.mybatisproject.api.common.config.http.ApiResponseCode;
+import study.mybatisproject.api.common.log.annotation.ExecutionTime;
 import study.mybatisproject.api.controller.dto.ApiResponse;
 import study.mybatisproject.api.controller.dto.BoardRequest;
 import study.mybatisproject.domain.board.entity.Board;
 import study.mybatisproject.domain.board.service.BoardService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,5 +97,55 @@ public class BoardController {
         }
         boardService.delete(boardId);
         return new ApiResponse<>(true);
+    }
+
+    /**
+     * 대용량 등록 처리 - 단순 반복문
+     */
+    @ApiOperation(value = "대용량 등록처리 방법 1", notes = "단순 반복문")
+    @PutMapping("/saveList1")
+    @ExecutionTime // 실행시간 측정
+    public ApiResponse<Boolean> saveList1() {
+        int count = 0;
+        List<BoardRequest> list = new ArrayList<>();
+        createBoardDummyData(count, list);
+        boardService.saveList1(list);
+        return new ApiResponse<>(true);
+
+        // 실행 시간 측정 결과
+        // [logExecutionTime:22] - Execution Time = StopWatch '': running time = 100327291200 ns
+        // = 약 100초 정도 걸렸다.
+    }
+
+    /**
+     * 대용량 등록 처리 - 100개씩 묶어서 처리
+     */
+    @PutMapping("/saveList2")
+    @ApiOperation(value = "대용량 등록처리 방법 2", notes = "100개씩 묶어서 처리")
+    @ExecutionTime
+    public ApiResponse<Boolean> saveList2() {
+        int count = 0;
+        List<BoardRequest> list = new ArrayList<>();
+        createBoardDummyData(count, list);
+        boardService.saveList2(list);
+        return new ApiResponse<>(true);
+
+        // 실행시간 측정 결과
+        // [logExecutionTime:22] - Execution Time = StopWatch '': running time = 680414200 ns
+        // 약 0.68초 정도 걸렸다. 훨씬 빠른 걸 확인할 수 있다.
+        // 대용량 처리는 이 방법을 쓰는 게 좋을 것 같다.
+    }
+
+    private void createBoardDummyData(int count, List<BoardRequest> list) {
+        while(true) {
+            count++;
+            String title = RandomStringUtils.randomAlphabetic(10);
+            String content = RandomStringUtils.randomAlphabetic(10);
+            list.add(new BoardRequest(title, content));
+            // 랜덤하게 10000건의 데이터 생성해주기
+            if (count >= 10000) {
+                break;
+            }
+        }
     }
 }
