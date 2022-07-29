@@ -7,6 +7,7 @@
             resultType="study.mybatisproject.domain.board.entity.Board">
     select
         b.board_id,
+        b.board_type,
         b.title,
         b.content,
         b.reg_date
@@ -18,6 +19,7 @@
             resultType="study.mybatisproject.domain.board.entity.Board">
         select
             b.board_id,
+            b.board_type,
             b.title,
             b.content,
             b.reg_date
@@ -30,12 +32,14 @@
     useGeneratedKeys="true" keyProperty="boardId">
         insert into t_board
         (
+         board_type,
          title,
          content,
          reg_date
         )
         values
         (
+            #{boardType.code},
             #{title},
             #{content},
             NOW()
@@ -45,6 +49,7 @@
     <update id="update" parameterType="study.mybatisproject.api.controller.dto.BoardRequest">
         update t_board
         set
+            board_type = #{boardType.code},
             title = #{title},
             content = #{content}
         where board_id = #{boardId}
