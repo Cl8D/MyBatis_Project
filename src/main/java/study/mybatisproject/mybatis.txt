@@ -5,7 +5,7 @@ jdbc-url로 설정하는 게 옳다고 하는 것 같다! (HikariCP가 인식하
 
 관련 답변) https://stackoverflow.com/questions/49088847/after-spring-boot-2-0-migration-jdbcurl-is-required-with-driverclassname
 
-===
+==============
 
 <MySQL에서 입력해준 쿼리> - sql 공부 진짜 절실하게 필요하다... ;ㅅ;
 create database mybatisProject;
@@ -21,7 +21,9 @@ create table t_board (
 
  desc t_board;
 
- insert into t_board(title, content, reg_date) values ('test', 'test content', '2022-07-28 19:22:38.0');
+ insert into t_board(title, content, reg_date)
+ values ('test', 'test content', '2022-07-28 19:22:38.0');
+
  select * from t_board;
 
 ==============
@@ -32,3 +34,54 @@ https://www.inflearn.com/questions/230160
 
 접근 경로) http://localhost:8080/swagger-ui/index.html
 혹은 그냥 http://localhost:8080/api-docs도 가능.
+
+
+==============
+
+- 쿼리 추가
+ alter table t_board
+ change column board_id board_id int(11) not null auto_increment comment '게시글 번호' first,
+ add column board_type varchar(10) not null comment '게시판 종류' after board_id;
+
+ : board_id에 대한 속성 변경 및, board_type 컬럼 추가.
+
+- 테이블 내용 전체 삭제
+truncate [테이블명]
+
+==============
+
+- objectMapper 관련.
+https://escapefromcoding.tistory.com/341#:~:text=ObjectMapper%EB%9E%80%3F,%EB%95%8C%20%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%20%EA%B8%B0%EC%88%A0%EC%9D%B4%EB%8B%A4.
+
+1) Object -> String (직렬화)
+Member member = new Member ("jenny", "22")
+String text = mapper.WriteValueAsString(member);
+-> {"name" : "jenny", "age": "22"}
+
+2) String -> Object
+mapper.readValue(text, Member.class)
+-> Member ("jenny", "22")
+
+==============
+
+- Jackson Custom Serialization
+https://homoefficio.github.io/2016/11/18/%EC%95%8C%EA%B3%A0%EB%B3%B4%EB%A9%B4-%EB%A7%8C%EB%A7%8C%ED%95%9C-Jackson-Custom-Serialization/
+* ObjectMapper는 여러 개의 module을 가질 수 있고, module은 여러 개의 customSerializer를 가질 수 있다.
+: 본 프로젝트는 customSerializer를 위해서 BaseCodeLabelEnumJsonSerializer를 구현하였다 :D
+
+==============
+
+- MappingJackson2JsonView
+: 스프링에서 자바를 JSON으로 변환하여 보여주는 뷰 구현 클래스.
+: 내부적으로 Jackson의 ObjectMapper를 활용한다 :)
+
+==============
+
+- Domain 클래스의 DB 컬럼 값이 특정한 코드라면, enum으로 관리하자.
+1) 불필요한 테이블, 코드 관리가 필요없어진다.
+2) 리스트, 상세 조회 시 테이블로 관리하지 않기 때문에 join을 통해 가져올 필요가 없다.
+3) API에서도 코드명 자체를 하드코딩 할 필요가 없다는 것.
+= 결과적으로 성능이 좋아진다.
+
+- 단, 오픈 이후 코드 추가, 수정, 삭제가 불가능하다는 게 불편하다 (완전 수정 후 재배포 필요)
+- 직접 DB에서 insert 할 때 주어진 enum 타입만 가능하다는 점. 근데 이건 오히려 좋은 점 아닌가 싶다.

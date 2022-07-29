@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 public class Board {
     private int boardId;
+    private BoardType boardType;
     private String title;
     private String content;
     private Date regDate;
