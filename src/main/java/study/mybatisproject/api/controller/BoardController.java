@@ -1,19 +1,21 @@
 package study.mybatisproject.api.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import study.mybatisproject.api.common.config.exception.ApiException;
 import study.mybatisproject.api.common.config.http.ApiResponseCode;
+import study.mybatisproject.api.common.framework.paging.domain.PageRequest;
+import study.mybatisproject.api.common.framework.paging.domain.PageRequestParam;
 import study.mybatisproject.api.common.log.annotation.ExecutionTime;
 import study.mybatisproject.api.controller.dto.ApiResponse;
 import study.mybatisproject.api.controller.dto.BoardRequest;
+import study.mybatisproject.api.controller.dto.BoardSearch;
 import study.mybatisproject.domain.board.entity.Board;
+import study.mybatisproject.domain.board.entity.BoardType;
 import study.mybatisproject.domain.board.service.BoardService;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/board")
 @Api(tags = "게시판 API")
+@Slf4j
 public class BoardController {
     private final BoardService boardService;
 
@@ -35,8 +38,19 @@ public class BoardController {
      */
     @GetMapping
     @ApiOperation(value = "게시글 여러 건 조회", notes = "게시글의 전체 목록을 조회할 수 있습니다.")
-    public ApiResponse<List<Board>> getBoardList() {
-        return new ApiResponse<>(boardService.getBoardList());
+    public ApiResponse<List<Board>> getBoardList(
+            // 보통 MyBatis에서 List를 조회할 때는 사용할 파라미터 정보를 Object(Class)나 Map을 많이 사용한다고 한다.
+            // 근데 뭐 이런 식으로 클래스별로 나눠줄 수도 있다.
+            @ApiParam BoardSearch boardSearch,
+            @ApiParam PageRequest pageRequest) {
+
+        log.info("pageRequest : {}", pageRequest);
+
+        // PageRequestParam => pageRequest, <T>paramter. 여기서 <T> = BoardSearch.
+        // pageRequest => page, size, limit, offset.
+        PageRequestParam<BoardSearch> pageRequestParam
+                = new PageRequestParam<>(pageRequest, boardSearch);
+        return new ApiResponse<>(boardService.getBoardList(pageRequestParam));
     }
 
     /**
@@ -63,6 +77,7 @@ public class BoardController {
     @ApiOperation(value = "게시글 저장 / 수정", notes = "신규 게시글을 저장하거나 기존 게시글을 수정할 수 있습니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "boardId", value = "게시글 번호", example = "1", dataTypeClass = int.class),
+            @ApiImplicitParam(name = "boardType", value = "게시글 유형", example = "NOTICE", dataTypeClass = BoardType.class),
             @ApiImplicitParam(name = "title", value = "제목", example = "title", dataTypeClass = String.class),
             @ApiImplicitParam(name = "content", value = "내용", example = "content", dataTypeClass = String.class)
     })
