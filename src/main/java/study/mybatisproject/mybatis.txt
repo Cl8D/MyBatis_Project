@@ -85,3 +85,13 @@ https://homoefficio.github.io/2016/11/18/%EC%95%8C%EA%B3%A0%EB%B3%B4%EB%A9%B4-%E
 
 - 단, 오픈 이후 코드 추가, 수정, 삭제가 불가능하다는 게 불편하다 (완전 수정 후 재배포 필요)
 - 직접 DB에서 insert 할 때 주어진 enum 타입만 가능하다는 점. 근데 이건 오히려 좋은 점 아닌가 싶다.
+
+==============
+
+- HandlerMethodArgumentResolver
+: 메서드 파라미터를 인자값에 주입해줄 수 있다.
+https://starkying.tistory.com/entry/Spring-MVC-%E2%80%94-HandlerMethodArgumentResolver-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0
+
+사용하는 경우.
+1) parameter로 받는 값이 여러 개일 때, 처리하는 코드의 중복이 발생하는 경우
+2) controller에 공통으로 입력되는 파라미터를 추가, 수정하는 등 공통적인 작업들을 한 번에 처리하고 싶을 때.

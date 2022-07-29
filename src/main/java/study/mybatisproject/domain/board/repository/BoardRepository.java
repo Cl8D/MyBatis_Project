@@ -1,7 +1,9 @@
 package study.mybatisproject.domain.board.repository;
 
 import org.springframework.stereotype.Repository;
+import study.mybatisproject.api.common.framework.paging.domain.PageRequestParam;
 import study.mybatisproject.api.controller.dto.BoardRequest;
+import study.mybatisproject.api.controller.dto.BoardSearch;
 import study.mybatisproject.domain.board.entity.Board;
 
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.Map;
  */
 @Repository
 public interface BoardRepository {
-    List<Board> getBoardList();
+    List<Board> getBoardList(PageRequestParam<BoardSearch> pageRequestParam);
     Board getBoard(int boardId);
     void save(BoardRequest board);
     void update(BoardRequest board);

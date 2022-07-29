@@ -6,12 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import study.mybatisproject.api.common.config.servlet.handler.BaseHandlerInterceptor;
+import study.mybatisproject.api.common.framework.paging.PageRequestArgumentResolver;
 import study.mybatisproject.domain.board.entity.BaseCodeLabelEnum;
 
+import java.util.List;
 import java.util.Locale;
 
 @Configuration
@@ -39,6 +42,12 @@ public class WebConfiguration implements WebMvcConfigurer {
         // addInterceptor를 통해 인터셉터를 등록할 수 있다.
         registry.addInterceptor(baseHandlerInterceptor());
         // 이 옵션 외에도 url에 대한 패턴 매칭도 가능! (addPathPatterns, excludePathPatterns...)
+    }
+
+    // 구현한 pageResolver 추가해주기.
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new PageRequestArgumentResolver());
     }
 
     // ObjectMapper 등록
