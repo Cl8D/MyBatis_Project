@@ -2,7 +2,9 @@ package study.mybatisproject.domain.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import study.mybatisproject.api.common.framework.paging.domain.PageRequestParam;
 import study.mybatisproject.api.controller.dto.BoardRequest;
+import study.mybatisproject.api.controller.dto.BoardSearch;
 import study.mybatisproject.domain.board.entity.Board;
 import study.mybatisproject.domain.board.repository.BoardRepository;
 
@@ -22,8 +24,8 @@ public class BoardService {
     /**
      * 게시글 여러 건 조회
      */
-    public List<Board> getBoardList() {
-        return boardRepository.getBoardList();
+    public List<Board> getBoardList(PageRequestParam<BoardSearch> pageRequestParam) {
+        return boardRepository.getBoardList(pageRequestParam);
     }
 
     /**
