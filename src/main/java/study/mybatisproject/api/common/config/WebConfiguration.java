@@ -2,12 +2,14 @@ package study.mybatisproject.api.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import study.mybatisproject.api.common.config.servlet.handler.BaseHandlerInterceptor;
@@ -19,6 +21,9 @@ import java.util.Locale;
 
 @Configuration
 public class WebConfiguration implements WebMvcConfigurer {
+    private static final String WINDOWS_FILE = "file:///";
+    private static final String LINUX_FILE = "file:";
+
     // 국제화와 관련된 기능.
     @Bean
     public ReloadableResourceBundleMessageSource messageSource() {
@@ -54,6 +59,26 @@ public class WebConfiguration implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new PageRequestArgumentResolver());
     }
+
+    // 정적 파일의 위치를 등록시켜주는 메서드 - 정적 리소스 핸들러
+    // 이러면 브라우저에서 리소스를 url로 접근할 수 있게 된다.
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String resourcePattern = config().getUploadResourcePath() + "**";
+        // 윈도우 기준
+        if(config().isLocal()) {
+            // resourcePattern이 들어왔을 때, uploadFilePath에서 리소스를 찾아서 응답해주는 형식.
+            // 즉, 실제 업로드 경로를 정적 파일의 위치로 보는 것.
+            registry.addResourceHandler(resourcePattern)
+                    .addResourceLocations("file:///" + config().getUploadFilePath());
+        } else {
+            // 리눅스나 유닉스
+            registry.addResourceHandler(resourcePattern)
+                    .addResourceLocations("file:" + config().getUploadFilePath());
+        }
+
+    }
+
 
     // ObjectMapper 등록
     @Bean

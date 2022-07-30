@@ -9,6 +9,8 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 @Slf4j
@@ -20,11 +22,10 @@ public class GlobalConfig {
     private ResourceLoader resourceLoader;
 
     private String uploadFilePath;
+    private String uploadResourcePath;
     private String schedulerCronExample1;
 
     private boolean local;
-    private boolean dev;
-    private boolean prod;
 
     @PostConstruct
     public void init() {
@@ -40,14 +41,18 @@ public class GlobalConfig {
         try {
             Resource resource = resourceLoader.getResource(resourcePath);
             Properties properties = PropertiesLoaderUtils.loadProperties(resource);
-            // 프로퍼티 값을 받아오기
-            this.uploadFilePath = properties.getProperty("uploadFile.path");
+
+            Path relativePath = Paths.get(""); // 현재 프로젝트의 상대 경로
+            // 프로퍼티 값을 받아오기 - 절대 경로 + 프로퍼티에서 받아온 이름으로
+            this.uploadFilePath = relativePath.toAbsolutePath() + properties.getProperty("uploadFile.path");
+            // static resource의 경로 - 브라우저에서 접속할 수 있는 경로
+            this.uploadResourcePath = properties.getProperty("uploadFile.resourcePath");
+
+            log.info("uploadPath = {}" , uploadFilePath);
 
             // 개발, 운영 서버마다 프로퍼티를 다르게 해서 스케줄러 설정을 다르게 하기 위해서.
             this.schedulerCronExample1 = properties.getProperty("scheduler.cron.example1");
             this.local = activeProfile.equals("local");
-            this.dev = activeProfile.equals("dev");
-            this.prod = activeProfile.equals("prod");
 
         } catch (IOException e) {
             log.error("exception", e);
@@ -58,6 +63,7 @@ public class GlobalConfig {
         return uploadFilePath;
     }
 
+    public String getUploadResourcePath() { return uploadResourcePath; }
     public String getSchedulerCronExample1() {
         return schedulerCronExample1;
     }
