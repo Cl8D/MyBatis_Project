@@ -13,4 +13,5 @@ public class Board {
     private String title;
     private String content;
     private Date regDate;
+    private boolean delYn;
 }

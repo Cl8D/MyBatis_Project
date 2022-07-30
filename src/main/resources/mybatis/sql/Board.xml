@@ -3,14 +3,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="study.mybatisproject.domain.board.repository.BoardRepository">
+    <resultMap id="getListResultMap" type="study.mybatisproject.domain.board.entity.Board">
+        <!-- column은 실제 DB의 컬럼을, 프로퍼티는 board domain의 delYn 필드를 의미하는 것 같다.-->
+        <!-- 여기서 typeHandler를 지정해서 DB와 도메인 사이 매핑을 해줄 수 있다. DB에서 Y,N으로 저장된 게 조회 시 true, false로 나온다!-->
+        <result column="del_yn" property="delYn"
+                typeHandler="study.mybatisproject.api.common.mybatis.typehandler.StringBooleanTypeHandler"/>
+    </resultMap>
     <select id="getBoardList" parameterType="study.mybatisproject.api.common.framework.paging.domain.PageRequestParam"
-            resultType="study.mybatisproject.domain.board.entity.Board">
+            resultMap="getListResultMap">
     select
         b.board_id,
         b.board_type,
         b.title,
         b.content,
-        b.reg_date
+        b.reg_date,
+        b.del_yn
     from t_board b
     <where>
         <!-- @를 사용하면 JAVA의 static method 접근이 가능하다. -->
@@ -59,14 +66,16 @@
          board_type,
          title,
          content,
-         reg_date
+         reg_date,
+         del_yn
         )
         values
         (
             #{boardType.code},
             #{title},
             #{content},
-            NOW()
+            NOW(),
+            #{delYn, typeHandler = study.mybatisproject.api.common.mybatis.typehandler.StringBooleanTypeHandler}
         )
     </insert>
 

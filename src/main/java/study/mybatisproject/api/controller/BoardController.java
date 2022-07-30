@@ -8,6 +8,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import study.mybatisproject.api.common.config.exception.ApiException;
 import study.mybatisproject.api.common.config.http.ApiResponseCode;
+import study.mybatisproject.api.common.config.web.bind.annotation.RequestConfig;
 import study.mybatisproject.api.common.framework.paging.domain.PageRequest;
 import study.mybatisproject.api.common.framework.paging.domain.PageRequestParam;
 import study.mybatisproject.api.common.log.annotation.ExecutionTime;
@@ -74,12 +75,15 @@ public class BoardController {
      * 게시글 저장 및 수정
      */
     @PutMapping("/save")
+    // 로그인 체크가 필요하다면 활성화하기
+//    @RequestConfig(loginCheck = true)
     @ApiOperation(value = "게시글 저장 / 수정", notes = "신규 게시글을 저장하거나 기존 게시글을 수정할 수 있습니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "boardId", value = "게시글 번호", example = "1", dataTypeClass = int.class),
             @ApiImplicitParam(name = "boardType", value = "게시글 유형", example = "NOTICE", dataTypeClass = BoardType.class),
             @ApiImplicitParam(name = "title", value = "제목", example = "title", dataTypeClass = String.class),
-            @ApiImplicitParam(name = "content", value = "내용", example = "content", dataTypeClass = String.class)
+            @ApiImplicitParam(name = "content", value = "내용", example = "content", dataTypeClass = String.class),
+            @ApiImplicitParam(name = "delYn", value = "삭제 여부", example = "false", dataTypeClass = Boolean.class)
     })
     public ApiResponse<Integer> save(BoardRequest board) {
         // 제목 필수 체크
@@ -101,6 +105,7 @@ public class BoardController {
      * 게시글 삭제
      */
     @DeleteMapping("/{boardId}")
+    @RequestConfig(loginCheck = true)
     @ApiOperation(value = "게시글 삭제", notes = "게시글 번호와 일치하는 게시글을 삭제합니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "boardId", value = "게시글 번호", example = "1", dataTypeClass = int.class),
