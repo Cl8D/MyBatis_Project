@@ -11,6 +11,7 @@ public class BoardRequest {
     private BoardType boardType;
     private String title;
     private String content;
+    private boolean delYn;
 
     public BoardRequest(String title, String content) {
         this.title = title;

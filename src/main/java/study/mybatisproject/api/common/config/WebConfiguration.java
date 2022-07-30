@@ -37,6 +37,11 @@ public class WebConfiguration implements WebMvcConfigurer {
         return new BaseHandlerInterceptor();
     }
 
+    @Bean
+    public GlobalConfig config() {
+        return new GlobalConfig();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // addInterceptor를 통해 인터셉터를 등록할 수 있다.
