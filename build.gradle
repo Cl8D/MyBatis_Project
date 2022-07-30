@@ -37,6 +37,16 @@ dependencies {
 	// aop
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
+	// jasper
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
+	// jstl
+	implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
+
+	// thumbnailator
+	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
+
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'

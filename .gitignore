@@ -29,10 +29,9 @@ out/production/classes/study/mybatisproject/MybatisProjectApplication.class
 
 .idea/
 
-out/production/classes/META-INF/spring-configuration-metadata.json
 
 *.class
 
-out/production/resources/application.yml
+out/
 
-out/production/resources/mybatis/sql/Board.xml
+upload/

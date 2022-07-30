@@ -104,3 +104,48 @@ https://starkying.tistory.com/entry/Spring-MVC-%E2%80%94-HandlerMethodArgumentRe
 
  이건 중간에 오타나서 default 값 바꾼 거... 컬럼 속성 바꿀 때 alter column - set 사용하면 된다.
  alter table t_board alter column del_yn set default 'N';
+
+==============
+
+쿼리 추가) 업로드된 파일 정보 저장하는 테이블 생성
+- collate는 문자열을 비교 및 정렬하기 위한 속성이라는데, 문자 데이터 타입을 어떻게 다룰 것인지 명시하는 것이라고 한다.
+기본적으로 default가 utf8_general_ci라고 한다!
+
+ create table t_upload_file (
+ 	upload_file_id int(11) not null auto_increment comment '파일 id',
+     pathname varchar(100) not null comment '전체 경로' collate 'utf8_general_ci',
+     filename varchar(50) not null comment '파일명' collate 'utf8_general_ci',
+ 	 original_filename varchar(100) not null comment '원본 파일명' collate 'utf8_general_ci',
+     size int(11) not null comment '파일 크기',
+     content_type varchar(50) not null comment '컨텐츠 종류' collate 'utf8_general_ci',
+     resource_pathname varchar(100) not null default '' comment '리소스 파일 경로' collate 'utf8_general_ci',
+     reg_date datetime not null comment '등록 일자',
+     primary key (upload_file_id) using btree
+ ) comment ='파일' collate='utf8_general_ci' engine=InnoDB auto_increment=4;
+
+
+  alter table t_upload_file change column pathname pathname varchar(500);
+
+- 문득 change column이랑 alter column 사이의 차이가 궁금해져서 찾아봤다.
+
+alter column)
+ALTER TABLE MyTable ALTER COLUMN foo SET DEFAULT 'bar';
+ALTER TABLE MyTable ALTER COLUMN foo DROP DEFAULT;
+-> 보통 alter의 경우 default 값을 세팅하거나 없앨 때 사용한다고 한다.
+
+change column)
+ALTER TABLE MyTable CHANGE COLUMN foo bar VARCHAR(32) NOT NULL FIRST;
+ALTER TABLE MyTable CHANGE COLUMN foo bar VARCHAR(32) NOT NULL AFTER baz;
+-> change의 경우 컬럼의 이름이나 데이터타입, 스키마 같은 걸 바꿀 때 사용한다.
+
+modify column)
+ALTER TABLE MyTable MODIFY COLUMN foo VARCHAR(32) NOT NULL AFTER baz;
+-> change column이 할 수 있는 건 다 하는데, 컬럼 이름은 재정의할 수 없다고 한다.
+
+그냥 웬만하면 change column을 쓰는 게 가장 좋을 것 같다!
+
+
+==============
+
+추가적으로, mapper 작성할 때 파라미터로 받는 #{}의 경우, 파라미터 타입에 있는 필드랑 동일해야 한다.
+언더스코어, 카멜케이스, 대소문자 등등 무조건 동일해야 하니까 이 부분은 나중에 틀리지 말자...! ㅎㅎ

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="study.mybatisproject.domain.board.repository.UploadFileRepository">
+    <select id="get" parameterType="int" resultType="study.mybatisproject.domain.board.entity.Image">
+        select
+            pathname,
+            filename,
+            original_filename,
+            size,
+            content_type,
+            resource_pathname,
+            reg_date
+        from t_upload_file uf
+        where uf.upload_file_id = #{uploadFileId}
+
+    </select>
+
+    <insert id="save" parameterType="study.mybatisproject.api.controller.dto.UploadFile">
+        insert into t_upload_file (pathname,
+                                   filename,
+                                   original_filename,
+                                   size,
+                                   content_type,
+                                   resource_pathname,
+                                   reg_date)
+        values (#{pathname},
+                #{filename},
+                #{originalFilename},
+                #{size},
+                #{contentType},
+                #{resourcePathname},
+                NOW()
+        )
+    </insert>
+</mapper>
