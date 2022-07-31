@@ -149,3 +149,19 @@ ALTER TABLE MyTable MODIFY COLUMN foo VARCHAR(32) NOT NULL AFTER baz;
 
 추가적으로, mapper 작성할 때 파라미터로 받는 #{}의 경우, 파라미터 타입에 있는 필드랑 동일해야 한다.
 언더스코어, 카멜케이스, 대소문자 등등 무조건 동일해야 하니까 이 부분은 나중에 틀리지 말자...! ㅎㅎ
+
+==============
+
+- 궁금해서 찾은 model과 modelAndView의 차이점.
+우선 결론은 ModelAndView는 Model에서 기능을 추가한 것이라고 볼 수 있다.
+
+Model 같은 경우 addAttribute : 속성 추가, getAttribute : 속성 조회, containsAttribute : 속성 존재하는지 확인, mergeAttribute : model 합치기.
+이정도의 기능을 가지고 있다고 보는 것이구...
+
+ModelAndView의 경우 setViewName을 통해 view 이름 설정, setView를 통한 View 설정,
+hasView를 통해 뷰 확인, getStatus를 통한 상태 설정 등 조금 더 다양한 기능을 가지고 있다.
+
+==============
+
+- JSP, JSTL 사용 방법 정리글.
+https://atoz-develop.tistory.com/entry/JSP-JSTL-%EC%82%AC%EC%9A%A9-%EB%B0%A9%EB%B2%95-%EC%A3%BC%EC%9A%94-%ED%83%9C%EA%B7%B8-%EB%AC%B8%EB%B2%95-%EC%A0%95%EB%A6%AC
